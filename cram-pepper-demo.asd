@@ -13,8 +13,9 @@
 	           :cram-language-designator-support
              :cram-executive 
 	           :cram-cloud-logger
-             ;;:pepper_head_manager_msgs-msg
              :nao_interaction_msgs-srv
+             :exp_pepper-msg
+             :cram-common-failures
 	           )
 
   :components
@@ -23,6 +24,7 @@
             (
               (:file "package")
               (:file "control-interface" :depends-on ("package"))
+              (:file "scan-server" :depends-on ("package"))
 
              )))
   )
