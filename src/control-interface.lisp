@@ -11,6 +11,22 @@
 ;;(defvar *ear-progress-srv* nil "ROS service to set ear progress")
 (defvar *move-to-srv* nil "ROS service to move")
 (defvar *neutral-pose-srv* nil "ROS service set neutral pose")
+(defvar *prio-pub* nil "prio ROS publisher")
+
+;;test parameters for pub PrioSetter
+
+ (defparameter
+                 
+                 *buffer-list* (make-sequence '(vector string) 
+   3
+   :initial-element "speaking"))
+
+    (defparameter
+                 
+                 *value-list* (make-sequence '(vector integer) 
+   3
+   :initial-element 1))
+
 
 
 (defun init-ros-pepper()
@@ -20,7 +36,8 @@
     (setf *eye-color-srv* "/naoqi_driver/leds/fade_rgb")
     ;;(setf *ear-progress-srv* "/naoqi_driver/leds/on")
     (setf *move-to-srv* "/naoqi_driver/motion/move_to") 
-    (setf *neutral-pose-srv* "/naoqi_driver/motion/neutral") 
+    (setf *neutral-pose-srv* "/naoqi_driver/motion/neutral")
+    (setf *prio-pub* (advertise (format nil "/pepper_head_manager/set_priorities")"resource_management_msgs/PrioritiesSetter")) 
 )
 
 ;;fade service
@@ -59,10 +76,18 @@
                 :pose pose-message )
 ))
 
-(roslisp:call-service "/naoqi_driver/motion/neutral" 'std_srvs-srv:Empty )
 
 ;;neutral service
 (defun call-neutral-pose-srv ()
     "Function to call the NeutralPose service."
   (call-service *neutral-pose-srv* ' std_srvs-srv:Empty )
 )
+
+
+    (defun send-prio-info (buffer-list value-list)
+  "Function to send prio info"
+  (publish *prio-pub* (make-message "resource_management_msgs/PrioritiesSetter"
+    :buffers buffer-list
+    :values value-list
+    )))
+

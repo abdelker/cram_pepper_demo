@@ -15,7 +15,8 @@
 	           :cram-cloud-logger
              :nao_interaction_msgs-srv
              :exp_pepper-msg
-             :cram-common-failures
+            ;; :cram-common-failure
+             :resource_management_msgs-msg
 	           )
 
   :components
