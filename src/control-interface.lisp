@@ -14,6 +14,9 @@
 (defvar *prio-pub* nil "prio ROS publisher")
 (defvar *prio-pub-arm-right* nil "prio ROS publisher for right arm")
 (defvar *prio-pub-arm-left* nil "prio ROS publisher for left arm")
+(defvar *say-srv* nil "ROS service to animate speech")
+(defvar *say-no-move-srv* nil "ROS service to ....")
+
 
 ;;test parameters for pub PrioSetter
 
@@ -41,7 +44,9 @@
     (setf *neutral-pose-srv* "/naoqi_driver/motion/neutral")
     (setf *prio-pub* (advertise (format nil "/pepper_head_manager/set_priorities")"resource_management_msgs/PrioritiesSetter")) 
     (setf *prio-pub-arm-right* (advertise (format nil "/pepper_arm_manager_right/set_priorities")"resource_management_msgs/PrioritiesSetter")) 
-    (setf *prio-pub-arm-left* (advertise (format nil "/pepper_arm_manager_left/set_priorities")"resource_management_msgs/PrioritiesSetter")) 
+    (setf *prio-pub-arm-left* (advertise (format nil "/pepper_arm_manager_left/set_priorities")"resource_management_msgs/PrioritiesSetter"))
+    (setf *say-srv* "/naoqi_driver/animated_speech/say")
+    (setf *say-no-move-srv* "/naoqi_driver/tts/say") 
 )
 
 ;;fade service
@@ -85,6 +90,20 @@
 (defun call-neutral-pose-srv ()
     "Function to call the NeutralPose service."
   (call-service *neutral-pose-srv* ' std_srvs-srv:Empty )
+)
+
+;;say service
+(defun call-say-srv (text)
+    "Function to call the AnimatedSpeech service."
+  (call-service *say-srv* ' nao_interaction_msgs-srv:Say
+  :text text )
+)
+
+;;say-no-move service
+(defun call-say-srv (text)
+    "Function to call the AnimatedSpeech service."
+  (call-service *say-no-move-srv* ' nao_interaction_msgs-srv:Say 
+  :text text )
 )
 
 
