@@ -12,6 +12,8 @@
 (defvar *move-to-srv* nil "ROS service to move")
 (defvar *neutral-pose-srv* nil "ROS service set neutral pose")
 (defvar *prio-pub* nil "prio ROS publisher")
+(defvar *prio-pub-arm-right* nil "prio ROS publisher for right arm")
+(defvar *prio-pub-arm-left* nil "prio ROS publisher for left arm")
 
 ;;test parameters for pub PrioSetter
 
@@ -38,6 +40,8 @@
     (setf *move-to-srv* "/naoqi_driver/motion/move_to") 
     (setf *neutral-pose-srv* "/naoqi_driver/motion/neutral")
     (setf *prio-pub* (advertise (format nil "/pepper_head_manager/set_priorities")"resource_management_msgs/PrioritiesSetter")) 
+    (setf *prio-pub-arm-right* (advertise (format nil "/pepper_arm_manager_right/set_priorities")"resource_management_msgs/PrioritiesSetter")) 
+    (setf *prio-pub-arm-left* (advertise (format nil "/pepper_arm_manager_left/set_priorities")"resource_management_msgs/PrioritiesSetter")) 
 )
 
 ;;fade service
@@ -87,6 +91,20 @@
     (defun send-prio-info (buffer-list value-list)
   "Function to send prio info"
   (publish *prio-pub* (make-message "resource_management_msgs/PrioritiesSetter"
+    :buffers buffer-list
+    :values value-list
+    )))
+
+(defun send-prio-arm-right-info (buffer-list value-list)
+  "Function to send prio info"
+  (publish *prio-pub-arm-right* (make-message "resource_management_msgs/PrioritiesSetter"
+    :buffers buffer-list
+    :values value-list
+    )))
+
+(defun send-prio-arm-left-info (buffer-list value-list)
+  "Function to send prio info"
+  (publish *prio-pub-arm-left* (make-message "resource_management_msgs/PrioritiesSetter"
     :buffers buffer-list
     :values value-list
     )))
