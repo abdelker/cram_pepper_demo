@@ -62,7 +62,7 @@
         (send-prio-info *buffer-list* *value-list*)
         )))        
    ;; ((princ "try again"))
-    )
-    )
+    
+    
    ;; )  
 

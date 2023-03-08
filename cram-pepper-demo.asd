@@ -26,6 +26,8 @@
               (:file "package")
               (:file "control-interface" :depends-on ("package"))
               (:file "scan-server" :depends-on ("package"))
+              (:file "pepper-actions" :depends-on ("package" 
+                                                    "control-interface"))
 
              )))
   )
