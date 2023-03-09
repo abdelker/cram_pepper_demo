@@ -15,8 +15,13 @@
 	           :cram-cloud-logger
              :nao_interaction_msgs-srv
              :exp_pepper-msg
-            ;; :cram-common-failure
+           ;;:cram-common-failure
              :resource_management_msgs-msg
+             :knowledge_sharing_planner_msgs-msg
+             :knowledge_sharing_planner_msgs-srv
+             :mementar-msg
+             :ontologenius-srv
+             :ontologenius-msg
 	           )
 
   :components
@@ -26,8 +31,9 @@
               (:file "package")
               (:file "control-interface" :depends-on ("package"))
               (:file "scan-server" :depends-on ("package"))
-              (:file "pepper-actions" :depends-on ("package" 
-                                                    "control-interface"))
+            ;;(:file "pepper-actions" :depends-on ("package" 
+            ;;                                      "control-interface"))
+              (:file "dt" :depends-on ("package"))
 
              )))
   )
