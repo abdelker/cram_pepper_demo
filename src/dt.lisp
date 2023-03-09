@@ -9,7 +9,8 @@
 (defvar *sparql-srv* nil "ROS service to sparql")
 
 (defvar ctx-designate nil)
-(defvar table "table_lack")
+(defvar table "table_1")
+(defvar table1 "table_1")
 (defvar str_sparql nil)
 
 (defun init-ros-dt()
@@ -24,34 +25,48 @@
 (defun call-sparql-srv (merge-sparql)
     "Function to call the sparql-srv service."
     (princ merge-sparql)
+    (terpri)
     ;;(cond 
        ;; ((typep merge-sparql 'list)
              (setq str_sparql(format nil "~{~A~^, ~}" (coerce merge-sparql 'list)))
            ;; ))
     ;;(setq str_sparql merge-sparql)
     (princ str_sparql)
-    (call-service *sparql-srv* ' ontologenius-srv:OntologeniusSparqlService
+    (terpri)
+    (princ "ontology results: ")
+    (terpri)
+    (princ (call-service *sparql-srv* ' ontologenius-srv:OntologeniusSparqlService
                 :query str_sparql
-                )
+                ))
 )
 
 (defun call-merge-srv (query ctx partial)
     "Function to call the KSP-merge service."
-    (princ "Waiting for KSP merge ")
-    (princ (format nil " query: ~a" query))
-    (princ (format nil " ctx: ~a" ctx))
-    (call-service *merge-srv* ' knowledge_sharing_planner_msgs-srv:Merge
+    (princ "Waiting for KSP merge")
+    (terpri)
+    (princ (format nil "query: ~a" query))
+    (terpri)
+    (princ (format nil "ctx: ~a" ctx))
+    (terpri)
+    (princ "merge response: ")
+    (terpri)
+    (princ (call-service *merge-srv* ' knowledge_sharing_planner_msgs-srv:Merge
                 :base_query query
                 :context_query ctx
                 :partial partial
-                )
+                ))
 )
 
 (defun call-understand-srv (sentence)
     "Function to call the KSP-understand service."
-    (call-service *understand-srv* ' knowledge_sharing_planner_msgs-srv:Understand
+    (princ "Waiting for KSP Understand")
+    (terpri)
+    (princ "understand response: ")
+    (terpri)
+    (princ (call-service *understand-srv* ' knowledge_sharing_planner_msgs-srv:Understand
                 :verbalization sentence
-                )
+                ))
+                  
 )
 
 #| (defun call-disambiguate-srv (color)
@@ -66,14 +81,19 @@
     (setq action (slot-value response-understand-srv 'KNOWLEDGE_SHARING_PLANNER_MSGS-SRV:ACTION))
     (setq sparql (slot-value response-understand-srv 'KNOWLEDGE_SHARING_PLANNER_MSGS-SRV:SPARQLQUERY))
 
-    (cond 
-        ((not ctx-designate)
-            (setq ctx-designate (vector (format nil "?0 isAbove ~a" table) "?0 isInContainer ?1" "?1 isA VisibleDtBox"))))
+   ;; (cond 
+        ;;((not ctx-designate)
+            (setq ctx-designate (vector (format nil "?0 isAbove ~a" table1)
+             "?0 isInContainer ?1" "?1 isA VisibleDtBox")
+           ;;  ))
+             )
 
     (setq response-merge-srv (call-merge-srv sparql ctx-designate nil))
     (setq merge-sparql (slot-value response-merge-srv 'KNOWLEDGE_SHARING_PLANNER_MSGS-SRV:MERGED_QUERY))
 
-    (setq matches (call-sparql-srv merge-sparql))
+    (setq response-sparql-srv  (call-sparql-srv merge-sparql))
+    (setq matches (slot-value response-sparql-srv 'ONTOLOGENIUS-SRV:RESULTS))
+
 
 )
 
