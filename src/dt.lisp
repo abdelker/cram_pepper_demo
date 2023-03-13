@@ -13,12 +13,21 @@
 (defvar table1 "table_1")
 (defvar str_sparql nil)
 
+(defun init ()
+  (start-ros-node "cram_pepper_demo")
+  (init-ros-dt))
+
 (defun init-ros-dt ()
   (setf *disambiguate-srv* "/KSP/disambiguate")
   (setf *understand-srv* "/KSP/understand")
   (setf *merge-srv* "/KSP/merge")
-  (setf *sparql-srv* "/ontologenius/sparql/pepper"))
+  (setf *sparql-srv* "/ontologenius/sparql/pepper")
+  (setf *verbalize-srv* "/KSP/verbalize"))
 
+;;verbalize
+(defun call-verbalize-srv (sparql)
+  (call-service *verbalize-srv* 'knowledge_sharing_planner_msgs-srv:Verbalization :sparqlQuery
+                sparql))
 ;;sparql_ontology
 (defun call-sparql-srv (merge-sparql)
   "Function to call the sparql-srv service."
@@ -38,7 +47,7 @@
   (terpri)
   (princ (call-service *sparql-srv* 'ontologenius-srv:OntologeniusSparqlService :query
                        str_sparql)))
-
+;;merge
 (defun call-merge-srv (query ctx partial)
   "Function to call the KSP-merge service."
   (princ "Waiting for KSP merge")
@@ -72,13 +81,14 @@
 
 (defun call-disambiguate-srv (match ctx)
   "Function to call the SetChestColor service."
-  (call-service *disambiguate-srv* ' knowledge_sharing_planner_msgs-srv:Disambiguation
-                :ontology "pepper"
-                :symbol_table (create-symbol-table match)
-                :individual (svref (slot-value match 'ONTOLOGENIUS-MSG:VALUES) 0)
+  (call-service *disambiguate-srv*
+                'knowledge_sharing_planner_msgs-srv:Disambiguation :ontology
+                "pepper"
+                :symbol_table (create-symbol-table match):individual
+                (svref (slot-value match 'ONTOLOGENIUS-MSG:VALUES)
+                       0)
                 ;;   (loop for n in (coerce match 'list) do (princ n) (return n))
-                )
-  ) 
+                )) 
 
 (defun designateCube (sentences)
   (setq response-understand-srv (call-understand-srv sentences))
@@ -101,7 +111,7 @@
       (terpri)
       (princ "I am not sure of what you are speaking about...")
       (terpri)
-      (setq new-context matches)
+      (setq new-context merge-sparql)
       (setq question "")
       ;;(setq onematch 
       (loop for
@@ -112,13 +122,51 @@
             ;;(
             (setq response-disambiguate-srv (call-disambiguate-srv match new-context))
             (terpri)
-            (princ "Sparqlresponse: ")
+            (princ "Sparql result: ")
             (terpri)
             (princ (setq sparql-result (slot-value response-disambiguate-srv 'KNOWLEDGE_SHARING_PLANNER_MSGS-SRV:SPARQLRESULT)))
             (setq ambiguous (slot-value response-disambiguate-srv 'KNOWLEDGE_SHARING_PLANNER_MSGS-SRV:AMBIGUOUS))
             (cond
              ((not (coerce ambiguous 'list))
               (setq match-sparql sparql-result))
-             (return nil)))))))
+             ((progn
+                (princ "not understand")
+                (terpri)
+                (return action))))
+            (terpri)
+            (princ "sparql : ")
+            (princ match-sparql)
+            (terpri)
+            (setq response-merge-match-srv (call-merge-srv match-sparql new-context t))
+            (setq match-sparql (slot-value response-merge-match-srv 'KNOWLEDGE_SHARING_PLANNER_MSGS-SRV:MERGED_QUERY))
+            (setq response-verbalize-srv (call-verbalize-srv match-sparql))
+            (setq question-part (slot-value response-verbalize-srv 'KNOWLEDGE_SHARING_PLANNER_MSGS-SRV:VERBALIZATION))
+            (princ "Question part : ")
+            (princ question-part)
+            (terpri)
+            (cond
+             ((string= question "")
+              (setq question question-part))
+             ((setq question (concatenate 'string question ", or, " question-part)))))
+      (princ "Do you mean : ")
+      (princ question)
+      (princ "?")
+      (setq ctx-designate new-context)
+      ;;(return action) 
+      ))
+   ((= (length matches) 1)
+    (progn
+      (terpri)
+      (princ "cube find:")
+      (terpri)
+      (princ matches)
+      (setq ctx-designate nil)
+      ;;(return action)
+      ))
+   ((progn
+       (princ "not understand")
+       (terpri)
+       ;;(return action)
+       ))))
 
 
