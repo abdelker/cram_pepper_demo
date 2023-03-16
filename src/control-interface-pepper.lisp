@@ -20,6 +20,11 @@
 
 ;;test parameters for pub PrioSetter
 
+
+                 
+(setq    *buffer-list* (vector  'speaking 'env_monitoring 'human_monitoring))
+(setq    *buffer-list* (vector  "speaking" "env_monitoring" "human_monitoring"))
+
  (defparameter
                  
                  *buffer-list* (make-sequence '(vector string) 
@@ -100,7 +105,7 @@
 )
 
 ;;say-no-move service
-(defun call-say-srv (text)
+(defun call-say-no-move-srv (text)
     "Function to call the AnimatedSpeech service."
   (call-service *say-no-move-srv* ' nao_interaction_msgs-srv:Say 
   :text text )

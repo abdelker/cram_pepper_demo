@@ -13,9 +13,6 @@
 (defvar table1 "table_1")
 (defvar str_sparql nil)
 
-(defun init ()
-  (start-ros-node "cram_pepper_demo")
-  (init-ros-dt))
 
 (defun init-ros-dt ()
   (setf *disambiguate-srv* "/KSP/disambiguate")
@@ -94,6 +91,8 @@
   (setq response-understand-srv (call-understand-srv sentences))
   (setq action (slot-value response-understand-srv 'KNOWLEDGE_SHARING_PLANNER_MSGS-SRV:ACTION))
   (setq sparql (slot-value response-understand-srv 'KNOWLEDGE_SHARING_PLANNER_MSGS-SRV:SPARQLQUERY))
+  (setq result "")
+  (setq state nil)
   ;; (cond 
   ;;((not ctx-designate)
   (setq ctx-designate (vector (format nil "?0 isAbove ~a" table1)
@@ -130,9 +129,11 @@
              ((not (coerce ambiguous 'list))
               (setq match-sparql sparql-result))
              ((progn
-                (princ "not understand")
+                (setq result "not understand")
+                (princ result)
                 (terpri)
-                (return action))))
+                ;;(return action)
+                (values state result action))))
             (terpri)
             (princ "sparql : ")
             (princ match-sparql)
@@ -152,8 +153,7 @@
       (princ question)
       (princ "?")
       (setq ctx-designate new-context)
-      ;;(return action) 
-      ))
+      (values state question action)))
    ((= (length matches) 1)
     (progn
       (terpri)
@@ -161,12 +161,13 @@
       (terpri)
       (princ matches)
       (setq ctx-designate nil)
-      ;;(return action)
-      ))
+      (setq state t)
+      (values state matches action)))
    ((progn
-       (princ "not understand")
-       (terpri)
-       ;;(return action)
-       ))))
+      (setq result "not understand")
+      (princ result)
+      (terpri)
+      (setq state nil)
+      (values state result action)))))
 
 
