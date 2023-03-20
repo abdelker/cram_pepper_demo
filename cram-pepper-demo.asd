@@ -26,6 +26,8 @@
              :ontologenius-srv
              :ontologenius-msg
              :pepper_head_manager_msgs-msg
+             :cram-ontologenius
+             :cram-directory-task
 	           )
 
   :components
@@ -47,7 +49,7 @@
                                                    "motion-designators"
                                                    "dt-pepper"
                                                    "pepper-actions"))                                    
-              (:file "dt" :depends-on ("package"))
+              ;;(:file "dt" :depends-on ("package"))
               (:file "discourse-pepper" :depends-on ("package"))
               (:file "ui" :depends-on ("package" "dt" "control-interface-pepper" "discourse-pepper"))
               (:file "init" :depends-on ("package" "dt" "control-interface-pepper" "dt-pepper"))
