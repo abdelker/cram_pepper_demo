@@ -1,9 +1,5 @@
 (in-package :pepper-demo)
 
-; (defun impossible-Take () 
-; (setq text-to-say "This is impossible for me")
-; (princ text-to-say))
-
 (defvar *onto* nil)
 (defvar *list-greeting* nil)
 (defvar *list-task* nil)
@@ -134,7 +130,7 @@
     (let ((n (+ 1 (random (length *list-question*)))))
      (nth (- n 1) *list-question*)))
 
-(defun impossibleTake ()
+(defun impossible-take ()
     (let ((n (+ 1 (random (length *list-impossible-take*)))))
      (nth (- n 1) *list-impossible-take*)))
 
