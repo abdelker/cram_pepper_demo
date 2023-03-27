@@ -7,11 +7,21 @@
 ;;INHIBIT -1
 ;;BACKGROUND 0
 
+(defun say (text &optional (sleep-time 1) (neutral-pose t) (no-move f))
+ (cond 
+  ((no-move)
+    (call-say-no-move-srv text))
+  
+  ((call-say-srv text)))
+  (sleep sleep-time)
 
+  (cond 
+  ((neutral-pose)
+    (sleep sleep-time))))
 
-(defun lookAt(buffer-name)
+(defun look-at (&optional (buffer-name nil))
   (let ((*buffer-list* (vector  "speaking" "env_monitoring" "human_monitoring")))
- (lookAt "env_monitoring")
+ (look-at "env_monitoring")
     (cond 
     ((string= buffer-name "speaking")  
                 
