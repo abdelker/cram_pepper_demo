@@ -19,6 +19,6 @@
 
           (let ((obj (desig:desig-prop-value target :name)))
              (print obj)
-             (lookObject obj))))
+             (look-object obj))))
              
              ))))))
