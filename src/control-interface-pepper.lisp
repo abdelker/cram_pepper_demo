@@ -74,13 +74,12 @@
                 :name "FaceLeds"
                 :color_name color))
 
-
 ;;on service
 (defun call-ear-progress-srv (&optional (progress 1))
  "Function to call the SetEarProgress service."
     (call-service *ear-progress-of-srv* ' nao_interaction_msgs-srv:String
              :request "EarLeds")
-    (loop for i in (range (* progress 11))
+    (loop for i in (range (* progress 11)) do
       (call-service *ear-progress-on-srv* ' nao_interaction_msgs-srv:String
              :request (format nil "EarLeds~d" i))))
 
