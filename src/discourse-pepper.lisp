@@ -30,9 +30,9 @@
  (setq *list-greeting* 
      (list "Hello i am pepper" "Hello my name is pepper"))
  (setq *list-task*
-           (list "We will do a task together" "I hope you are willing to help me" "I count on you to help me")
-           (setq *list-explanation*)
-           (list "I'm going to ask you to remove {} cubes and put them in the pink box." "I'll describe you {} cubes to put in the pink box" "We\"ll put {} the cubes in the pink box. I\"ll describe them to you"))
+           (list "We will do a task together" "I hope you are willing to help me" "I count on you to help me"))
+ (setq *list-explanation*
+            (list (format nil "I'm going to ask you to remove ~a  cubes and put them in the pink box." "I'll describe you ~a  cubes to put in the pink box" "We'll put ~a  the cubes in the pink box. I'll describe them to you" word)))
  (setq *list-explanation*
            (list (format nil "I'm going to ask you to remove ~a cubes and put them in the pink box." "I'll describe you ~a cubes to put in the pink box" "We'll put ~a the cubes in the pink box. I'll describe them to you" word)))
  (setq *list-please-take*
@@ -72,84 +72,88 @@
      (list "Which one do you want to enter " "Is that what you mean " "Do you mean  "))
 
  (setq *list-impossible-take*
-     (list "I can't catch anything but I'll show it to you"  "I'll show it to you instead because I can't catch it"  "Since I can't catch it  I'll show it to you")))    
+     (list "I can't catch anything but I'll show it to you"  "I'll show it to you instead because I can't catch it"  "Since I can't catch it  I'll show it to you")))  
       
-(defun hello ()
+(defun say-hello ()
  (let ((n (+ 1 (random (length *list-greeting*)))))
       (nth (- n 1) *list-greeting*)))
 
-(defun wrong-cube ()
+(defun say-wrong-cube ()
        (let ((n (+ 1 (random (length *list-wrong-cube*)))))
         (nth (- n 1) *list-wrong-cube*)))
 
-(defun goodbye ()
+(defun say-goodbye ()
     (let ((n (+ 1 (random (length *list-end*)))))
      (nth (- n 1) *list-end*)))
 
-(defun continueTask ()
+(defun say-continueTask ()
     (let ((n (+ 1 (random (length *list-continue*)))))
      (nth (- n 1) *list-continue*)))
 
-(defun congrate ()
+(defun say-congrate ()
     (let ((n (+ 1 (random (length *list-congrate*)))))
      (nth (- n 1) *list-congrate*)))
 
-(defun cancel ()
+(defun say-cancel ()
     (let ((n (+ 1 (random (length *list-cancel*)))))
      (nth (- n 1) *list-cancel*)))
 
-(defun scan ()
+(defun say-scan ()
     (let ((n (+ 1 (random (length *list-scan*)))))
      (nth (- n 1) *list-scan*)))
 
-(defun rescan ()
+(defun say-rescan ()
     (let ((n (+ 1 (random (length *list-rescan*)))))
      (nth (- n 1) *list-rescan*)))
 
-(defun waiting ()
+(defun say-waiting ()
     (let ((n (+ 1 (random (length *list-waiting*)))))
      (nth (- n 1) *list-waiting*)))
 
-(defun pointGood-cube ()
+(defun say-pointGood-cube ()
     (let ((n (+ 1 (random (length *list-point-good-cube*)))))
      (nth (- n 1) *list-point-good-cube*)))
 
-(defun no-cubeTake ()
+(defun say-no-cubeTake ()
     (let ((n (+ 1 (random (length *list-no-cube-take*)))))
      (nth (- n 1) *list-no-cube-take*)))
 
-(defun designate-cube ()
+(defun say-designate-cube ()
     (let ((n (+ 1 (random (length *list-designate-cube*)))))
      (nth (- n 1) *list-designate-cube*)))
 
-(defun notUnderstand ()
+(defun say-notUnderstand ()
     (let ((n (+ 1 (random (length *list-not-understand*)))))
      (nth (- n 1) *list-not-understand*)))
 
-(defun question ()
+(defun say-question ()
     (let ((n (+ 1 (random (length *list-question*)))))
      (nth (- n 1) *list-question*)))
 
-(defun impossible-take ()
+(defun say-impossible-take ()
     (let ((n (+ 1 (random (length *list-impossible-take*)))))
      (nth (- n 1) *list-impossible-take*)))
 
-(defun discover-cube (cube)
-        (list-discourse :word cube)
-        (let ((n (+ 1 (random (length *list-discover*)))))
-         (nth (- n 1) *list-discover*)))
+(defun say-discover-cube (cube)
+         (let ((?word cube))
+          (list-discourse ?word)
+          (let ((n (+ 1 (random (length *list-discover*)))))
+           (nth (- n 1) *list-discover*))))
  
-(defun help (name)
-    (list-discourse :word name)
-    (let ((n (+ 1 (random (length *list-help*)))))
-     (nth (- n 1) *list-help*)))
+(defun say-help (name)
+    (let ((?word name))
+     (list-discourse ?word)
+     (let ((n (+ 1 (random (length *list-help*)))))
+      (nth (- n 1) *list-help*))))
 
-(defun explain (nb)
-    (list-discourse :word nb)
-    (let ((n (+ 1 (random (length *list-explanation*)))))
-     (nth (- n 1) *list-explanation*)))
+(defun say-explain (nb)
+     (let ((?word nb))
+      (list-discourse ?word)
+      (let ((n (+ 1 (random (length *list-explanation*)))))
+       (nth (- n 1) *list-explanation*))))
 
-(defun take-cube (cube)
-    (list-discourse :word cube)
-    (let ((n (+ 1 (random (length *list-please-take*)))))
-     (nth (- n 1) *list-please-take*)))
+(defun say-take-cube (cube)
+    (let ((?word cube))
+     (list-discourse ?word)
+     (let ((n (+ 1 (random (length *list-please-take*)))))
+      (nth (- n 1) *list-please-take*))))
