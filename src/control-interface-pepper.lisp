@@ -23,18 +23,18 @@
 
 
                  
-(setq    *buffer-list* (vector  'speaking 'env_monitoring 'human_monitoring))
-(setq    *buffer-list* (vector  "speaking" "env_monitoring" "human_monitoring"))
+;; (setq    *buffer-list* (vector  'speaking 'env_monitoring 'human_monitoring))
+;; (setq    *buffer-list* (vector  "speaking" "env_monitoring" "human_monitoring"))
 
-(defparameter
-  *buffer-list* (make-sequence '(vector string) 
-                 3
-                 :initial-element "speaking"))
+;; (defparameter
+;;   *buffer-list* (make-sequence '(vector string) 
+;;                  3
+;;                  :initial-element "speaking"))
 
-(defparameter
-  *value-list* (make-sequence '(vector integer) 
-                3
-                :initial-element 1))       
+;; (defparameter
+;;   *value-list* (make-sequence '(vector integer) 
+;;                 3
+;;                 :initial-element 1))       
 
 
 
