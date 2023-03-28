@@ -21,7 +21,7 @@
 
 (defun look-at (&optional (buffer-name nil))
   (let ((*buffer-list* (vector  "speaking" "env_monitoring" "human_monitoring")))
- (look-at "env_monitoring")
+ ;;(look-at "env_monitoring")
     (cond 
     ((string= buffer-name "speaking")  
                 
