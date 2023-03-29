@@ -8,7 +8,7 @@
 (defvar *neutral-right-pub* nil "ROS publisher")
 (defvar *neutral-left-pub* nil "ROS publisher")
 (defvar *speechToText-sub* nil "ROS subscriber")
-(defvar selected-arm nil)
+;;(defvar selected-arm nil)
 (defvar *current-state* nil)
 
 (defun init-ros-dt-pepper ()
@@ -29,7 +29,15 @@
   ;;(init-speaking-buffer)
   (setq *current-state* nil)
   (set-state :no-activity))
-  
+;;;;;;;;;;;;;;ui-ontology-code;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; (defun check-onto ()
+;     (dt::update-cube-list)
+;     (cond ((> (length dt::*cubes*) 1)
+;         (pepper-state :ready))
+;         ((progn 
+;             ())))
+; )
   
 (defun pepper-state (state)
   (ecase state
@@ -103,9 +111,9 @@
      ;;(return t)
      
 
-(defun selectArm (cube-name)
- (setq new-pose (transform-pose cube-name "base_footprint"))
- (setq selected-arm "left"))
+(defun select-arm (cube-name)
+ (let (( new-pose (transform-pose cube-name "base_footprint"))
+       (selected-arm "left"))))
      
 
 (defun transform-pose (from-frame to-frame stamp)
