@@ -32,9 +32,7 @@
  (setq *list-task*
            (list "We will do a task together" "I hope you are willing to help me" "I count on you to help me"))
  (setq *list-explanation*
-            (list (format nil "I'm going to ask you to remove ~a  cubes and put them in the pink box." "I'll describe you ~a  cubes to put in the pink box" "We'll put ~a  the cubes in the pink box. I'll describe them to you" word)))
- (setq *list-explanation*
-           (list (format nil "I'm going to ask you to remove ~a cubes and put them in the pink box." "I'll describe you ~a cubes to put in the pink box" "We'll put ~a the cubes in the pink box. I'll describe them to you" word)))
+            (list (format nil "I'm going to ask you to remove ~a  cubes and put them in the pink box." word) (format nil "I'll describe you ~a  cubes to put in the pink box" word ) (format nil "We'll put ~a  the cubes in the pink box. I'll describe them to you" word)))
  (setq *list-please-take*
            (list (format nil "Can you remove ~a" "Remove ~a" "Take ~a" word)))
  (setq *list-wrong-cube*
