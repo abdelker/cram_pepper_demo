@@ -111,14 +111,14 @@
      ;;(return t)
      
 
-(defun select-arm (cube-name)
- (let (( new-pose (transform-pose cube-name "base_footprint"))
-       (selected-arm "left"))))
+; (defun select-arm (cube-name)
+;  (let (( new-pose (transform-pose cube-name "base_footprint" (ros-time)))
+;        (selected-arm "left"))))
      
 
-(defun transform-pose (from-frame to-frame stamp)
-   (cl-transforms-stamped:lookup-transform cram-tf:*transformer* 
-    to-frame from-frame :timeout 10.0))
+; (defun transform-pose (from-frame to-frame stamp)
+;    (cl-transforms-stamped:lookup-transform cram-tf:*transformer* 
+;     to-frame from-frame :timeout 10.0))
   
 
 
@@ -152,16 +152,16 @@
         (look-at "env_monitoring")))
   
 
-(defun init-speaking-buffer ()
-      (let 
-            ((point-message (roslisp:make-msg "geometry_msgs/PointStamped"
-                                    (frame_id header) "base_footprint"
-                                    (stamp header) (ros-time)
-                                    (x point) 1
-                                    (y point) 1.5
-                                    (z point) 1.7))
-             (priority-message (roslisp:make-msg "resource_management_msgs/MessagePriority"
-                                     :value 1)))
-       (publish *speaking-point-pub* (roslisp:make-msg "pepper_head_manager_msgs/PrioritizedPoint") 
-                                     :priority priority-message :data point-message)))
+; (defun init-speaking-buffer ()
+;       (let 
+;             ((point-message (roslisp:make-msg "geometry_msgs/PointStamped"
+;                                     (frame_id header) "base_footprint"
+;                                     (stamp header) (ros-time)
+;                                     (x point) 1
+;                                     (y point) 1.5
+;                                     (z point) 1.7))
+;              (priority-message (roslisp:make-msg "resource_management_msgs/MessagePriority"
+;                                      :value 1)))
+;        (publish *speaking-point-pub* (roslisp:make-msg "pepper_head_manager_msgs/PrioritizedPoint") 
+;                                      :priority priority-message :data point-message)))
       
