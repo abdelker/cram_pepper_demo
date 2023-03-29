@@ -7,16 +7,16 @@
 ;;INHIBIT -1
 ;;BACKGROUND 0
 
-(defun say (text &optional (sleep-time 1) (neutral-pose t) (no-move f))
+(defun say (text &optional (sleep-time 1) (neutral-pose t) (no-move nil))
  (cond 
-  ((no-move)
+  ((eq no-move t)
     (call-say-no-move-srv text))
   
   ((call-say-srv text)))
   (sleep sleep-time)
 
   (cond 
-  ((neutral-pose)
+  ((eql neutral-pose t)
     (sleep sleep-time))))
 
 (defun look-at (&optional (buffer-name nil))
