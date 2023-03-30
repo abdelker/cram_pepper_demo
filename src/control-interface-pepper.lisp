@@ -54,7 +54,7 @@
     (setf *say-no-move-srv* "/naoqi_driver/tts/say")) 
 
 ;;get range
-(defun range (max &key (min 0) (step 1))
+(defun range (max &key (min 1) (step 1))
    (loop for n from min below max by step
       collect n))
 
@@ -77,8 +77,9 @@
 ;;on service
 (defun call-ear-progress-srv (&optional (progress 1))
  "Function to call the SetEarProgress service."
+    (roslisp:wait-for-service *ear-progress-on-srv*)
     (call-service *ear-progress-off-srv* ' nao_interaction_msgs-srv:String
-             :request "EarLed")
+             :request "EarLeds")
     (loop for i in (range (* progress 11)) do
       (call-service *ear-progress-on-srv* ' nao_interaction_msgs-srv:String
              :request (format nil "EarLed~d" i))))
