@@ -10,6 +10,7 @@
 (defvar *speechToText-sub* nil "ROS subscriber")
 ;;(defvar selected-arm nil)
 (defvar *current-state* nil)
+(defvar *current-goal* nil)
 
 (defun init-ros-dt-pepper ()
   (setf *speaking-point-pub* (advertise "/pepper_head_manager/speaking/pepper_head_manager_msgs1_PrioritizedPoint"
@@ -26,18 +27,24 @@
                             "pepper_head_manager_msgs/PrioritizedJointTrajectory"))
   ; (setf *speechToText-sub* (subscribe "ros_stt/said" "std_msgs/String"
   ;                                     #'listenningDesignate)) 
-  ;;(init-speaking-buffer)
+  (init-speaking-buffer)
+  (look-at)
   (setq *current-state* nil)
-  (set-state :no-activity))
+  (set-state :no-activity)
+  (look-at)
+  (call-ear-progress-srv 1)
+  (call-eye-color-srv "blue")
+  (call-neutral-pose-srv)
+  (setq *current-goal* nil))
 ;;;;;;;;;;;;;;ui-ontology-code;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; (defun check-onto ()
-;     (dt::update-cube-list)
-;     (cond ((> (length dt::*cubes*) 1)
-;         (pepper-state :ready))
-;         ((progn 
-;             ())))
-; )
+(defun check-onto ()
+    (dt::update-cube-list)
+    (cond ((> (length dt::*cubes*) 1)
+        (pepper-state :ready))
+        ((progn 
+            (call-say-srv "I did not see the cubes well can you help me?"))))
+)
   
 (defun pepper-state (state)
   (ecase state
@@ -152,16 +159,23 @@
         (look-at "env_monitoring")))
   
 
-; (defun init-speaking-buffer ()
-;       (let 
-;             ((point-message (roslisp:make-msg "geometry_msgs/PointStamped"
-;                                     (frame_id header) "base_footprint"
-;                                     (stamp header) (ros-time)
-;                                     (x point) 1
-;                                     (y point) 1.5
-;                                     (z point) 1.7))
-;              (priority-message (roslisp:make-msg "resource_management_msgs/MessagePriority"
-;                                      :value 1)))
-;        (publish *speaking-point-pub* (roslisp:make-msg "pepper_head_manager_msgs/PrioritizedPoint") 
-;                                      :priority priority-message :data point-message)))
+(defun init-speaking-buffer ()
+      (let 
+            ((point-message (roslisp:make-msg "geometry_msgs/PointStamped"
+                                    (frame_id header) "base_footprint"
+                                    (stamp header) (ros-time)
+                                    (x point) 1
+                                    (y point) 1.5
+                                    (z point) 1.7))
+             (priority-message (roslisp:make-msg "resource_management_msgs/MessagePriority"
+                                     :value 1)))
+       (publish *speaking-point-pub* (roslisp:make-msg "pepper_head_manager_msgs/PrioritizedPoint" 
+                                     :priority priority-message :data point-message))))
+
+
+(defun change-context ()
+  (cond ((eql dt::*cheat* nil) ; previous state of self.dt.cheat
+      (call-eye-color-srv "white")) ;cheat onto pepper
       
+      ((call-eye-color-srv "blue")))
+      (dt::change-context)) ;onto human_0
