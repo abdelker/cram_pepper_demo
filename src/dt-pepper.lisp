@@ -3,27 +3,27 @@
 ;;publisher
 (defvar *speaking-point-pub* nil "ROS publisher")
 (defvar *env-point-pub* nil "ROS publisher")
-(defvar *pointAt-right-pub* nil "ROS publisher")
-(defvar *pointAt-left-pub* nil "ROS publisher")
+(defvar *point-at-right-pub* nil "ROS publisher")
+(defvar *point-at-left-pub* nil "ROS publisher")
 (defvar *neutral-right-pub* nil "ROS publisher")
 (defvar *neutral-left-pub* nil "ROS publisher")
 (defvar *speechToText-sub* nil "ROS subscriber")
-;;(defvar selected-arm nil)
+(defvar *selected-arm* nil)
 (defvar *current-state* nil)
 (defvar *current-goal* nil)
 
-(defun init-ros-dt-pepper ()
+(defun init-dt-pepper ()
   (setf *speaking-point-pub* (advertise "/pepper_head_manager/speaking/pepper_head_manager_msgs1_PrioritizedPoint"
                               "pepper_head_manager_msgs/PrioritizedPoint"))
   (setf *env-point-pub* (advertise "/pepper_head_manager/env_monitoring/pepper_head_manager_msgs1_PrioritizedPoint"
                          "pepper_head_manager_msgs/PrioritizedPoint"))
-  (setf *pointAt-right-pub* (advertise "/pepper_arm_manager_right/social/pepper_arm_manager_msgs1_PrioritizedPoint"
+  (setf *point-at-right-pub* (advertise "/pepper_arm_manager_right/social/pepper_arm_manager_msgs1_PrioritizedPoint"
+                              "pepper_head_manager_msgs/PrioritizedPoint"))
+  (setf *point-at-left-pub* (advertise "/pepper_arm_manager_left/social/pepper_arm_manager_msgs1_PrioritizedPoint"
                              "pepper_head_manager_msgs/PrioritizedPoint"))
-  (setf *neutral-left-pub* (advertise "/pepper_arm_manager_left/social/pepper_arm_manager_msgs1_PrioritizedPoint"
-                            "pepper_head_manager_msgs/PrioritizedPoint"))
-  (setf *pointAt-right-pub* (advertise "/pepper_arm_manager_right/manipulation/pepper_arm_manager_msgs2_PrioritizedJointTrajectory"
+  (setf *neutral-right-pub* (advertise "/pepper_arm_manager_right/manipulation/pepper_arm_manager_msgs2_PrioritizedJointTrajectory"
                              "pepper_head_manager_msgs/PrioritizedJointTrajectory"))
-  (setf *pointAt-left-pub* (advertise "/pepper_arm_manager_left/manipulation/pepper_arm_manager_msgs2_PrioritizedJointTrajectory"
+  (setf *neutral-left-pub* (advertise "/pepper_arm_manager_left/manipulation/pepper_arm_manager_msgs2_PrioritizedJointTrajectory"
                             "pepper_head_manager_msgs/PrioritizedJointTrajectory"))
   ; (setf *speechToText-sub* (subscribe "ros_stt/said" "std_msgs/String"
   ;                                     #'listenningDesignate)) 
@@ -41,10 +41,10 @@
 (defun check-onto ()
     (dt::update-cube-list)
     (cond ((> (length dt::*cubes*) 1)
-        (pepper-state :ready))
+           (pepper-state :ready))
         ((progn 
-            (call-say-srv "I did not see the cubes well can you help me?"))))
-)
+            (call-say-srv "I did not see the cubes well can you help me?")))))
+
   
 (defun pepper-state (state)
   (ecase state
@@ -85,7 +85,7 @@
                   (setq *current-state* state)
                   (call-chest-color-srv "white")))))
 ;;(pepper-state state))
-
+ 
 (defun point-at-object (object-name)
   "Function to point at Object"
   (princ "point at :")
@@ -99,28 +99,40 @@
                                          (frame_id header)
                                          object-name
                                          (stamp header)
-                                         (ros-time))))
-       (setq selected-arm (selectArm object-name))
+                                         (ros-time)))
+        (selected-arm (select-arm object-name))
+        (priority-info (roslisp:make-msg 'resource_management_msgs-msg:MessagePriority (value) 1)))
+       (princ selected-arm)
+
     (cond
      ((string= selected-arm "left")
-      (publish *pointAt-left-pub*
+      (princ "left")
+      (publish *point-at-left-pub*
                (make-message "pepper_head_manager_msgs/PrioritizedPoint"
-                             :priority 1 :data point-message)))
+                             :priority priority-info :data point-message)))
                
      ((string= selected-arm "right")
-      (publish *pointAt-right-pub*
+      (princ "right")
+      (publish *point-at-right-pub*
                (make-message "pepper_head_manager_msgs/PrioritizedPoint"
-                             :priority 1 :data point-message))))))
+                             :priority priority-info :data point-message)))
                
-   ;;  ((return nil))
+     ((values nil)))
      
-     ;;(pointAt "social" selected-arm)
-     ;;(return t)
+    (point-at "social" selected-arm)
+    (values t)))
      
 
-; (defun select-arm (cube-name)
-;  (let (( new-pose (transform-pose cube-name "base_footprint" (ros-time)))
-;        (selected-arm "left"))))
+(defun select-arm (cube-name)
+ (let (( new-pose (cl-transforms-stamped:lookup-transform cram-tf:*transformer* "base_footprint" cube-name)))
+  (princ new-pose)
+  (let ((y-pos  (msg-slot-value (msg-slot-value
+                                 new-pose :translation) :x)))
+       (cond ((>= y-pos 0)
+              (setf *selected-arm* "left"))
+
+             ((setf *selected-arm* "right"))))))
+      
      
 
 ; (defun transform-pose (from-frame to-frame stamp)
@@ -170,12 +182,13 @@
              (priority-message (roslisp:make-msg "resource_management_msgs/MessagePriority"
                                      :value 1)))
        (publish *speaking-point-pub* (roslisp:make-msg "pepper_head_manager_msgs/PrioritizedPoint" 
-                                     :priority priority-message :data point-message))))
+                                      :priority priority-message :data point-message))))
 
 
 (defun change-context ()
   (cond ((eql dt::*cheat* nil) ; previous state of self.dt.cheat
-      (call-eye-color-srv "white")) ;cheat onto pepper
+         (call-eye-color-srv "white")) ;cheat onto pepper
       
       ((call-eye-color-srv "blue")))
-      (dt::change-context)) ;onto human_0
+  (dt::change-context)) ;onto human_0
+
