@@ -9,6 +9,7 @@
 (defvar *list-end* nil)
 (defvar *list-help* nil)
 (defvar *list-congrate* nil)
+(defvar *list-cancel* nil)
 (defvar *list-scan* nil)
 (defvar *list-rescan* nil)
 (defvar *list-discover* nil)
@@ -21,12 +22,12 @@
 (defvar *list-question* nil)
 (defvar *list-impossible-take* nil)
 
-(defun init-onto (onto)
-    (setq *onto* onto)
-    (list-discourse)
-    (princ (hello)))
+; (defun init-onto (onto)
+;     (setq *onto* onto)
+;     (init-list-discourse)
+;     (princ (hello)))
 
-(defun list-discourse (&optional (word ""))
+(defun init-list-discourse (&optional (word ""))
  (setq *list-greeting* 
      (list "Hello i am pepper" "Hello my name is pepper"))
  (setq *list-task*
@@ -60,10 +61,10 @@
  (setq *list-continue*
              (list "Let's go to the next one" "Let's go on"))
 
- (setq *list-designate_cube*
+ (setq *list-designate-cube*
              (list "I think you mean this one" "you want to talk about this cube" "here is the cube you are talking about"))
 
- (setq *list-not_understand*
+ (setq *list-not-understand*
      (list "I didn't quite understand"  "I'm not sure I understood"  "Sorry  can you repeat that"))
 
  (setq *list-question*
@@ -134,24 +135,24 @@
 
 (defun say-discover-cube (cube)
          (let ((?word cube))
-          (list-discourse ?word)
+          (init-list-discourse ?word)
           (let ((n (+ 1 (random (length *list-discover*)))))
            (nth (- n 1) *list-discover*))))
  
 (defun say-help (name)
     (let ((?word name))
-     (list-discourse ?word)
+     (init-list-discourse ?word)
      (let ((n (+ 1 (random (length *list-help*)))))
       (nth (- n 1) *list-help*))))
 
 (defun say-explain (nb)
      (let ((?word nb))
-      (list-discourse ?word)
+      (init-list-discourse ?word)
       (let ((n (+ 1 (random (length *list-explanation*)))))
        (nth (- n 1) *list-explanation*))))
 
 (defun say-take-cube (cube)
     (let ((?word cube))
-     (list-discourse ?word)
+     (init-list-discourse ?word)
      (let ((n (+ 1 (random (length *list-please-take*)))))
       (nth (- n 1) *list-please-take*))))
