@@ -38,7 +38,7 @@
 
 
 
-(defun init-ros-pepper()
+(defun init-pepper()
     "Initialize ROS Communication"
   ;;(setf *speaking-point-pub* (advertise (format nil "speaking")"pepper_head_manager_msgs/PrioritizedPoint"))
     (setf *chest-color-srv* "/naoqi_driver/leds/fade_rgb") 
