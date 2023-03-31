@@ -98,40 +98,47 @@
   (let ((point-message (roslisp:make-msg "geometry_msgs/PointStamped"
                                          (frame_id header)
                                          object-name
-                                         (stamp header)
-                                         (ros-time)))
+                                         ;;(stamp header)
+                                         ;;(ros-time)
+                                         ))
         (selected-arm (select-arm object-name))
         (priority-info (roslisp:make-msg 'resource_management_msgs-msg:MessagePriority (value) 1)))
-       (princ selected-arm)
 
-    (cond
-     ((string= selected-arm "left")
-      (princ "left")
-      (publish *point-at-left-pub*
-               (make-message "pepper_head_manager_msgs/PrioritizedPoint"
-                             :priority priority-info :data point-message)))
+     (cond
+      ((string= selected-arm "left")
+       (publish *point-at-left-pub*
+                (make-message "pepper_head_manager_msgs/PrioritizedPoint"
+                              :priority priority-info :data point-message)))
                
-     ((string= selected-arm "right")
-      (princ "right")
-      (publish *point-at-right-pub*
-               (make-message "pepper_head_manager_msgs/PrioritizedPoint"
-                             :priority priority-info :data point-message)))
+      ((string= selected-arm "right")
+       (publish *point-at-right-pub*
+                (make-message "pepper_head_manager_msgs/PrioritizedPoint"
+                              :priority priority-info :data point-message)))
                
-     ((values nil)))
+      ((values nil)))
      
-    (point-at "social" selected-arm)
-    (values t)))
+     (point-at "social" selected-arm)
+     (values t)))
      
 
 (defun select-arm (cube-name)
- (let (( new-pose (cl-transforms-stamped:lookup-transform cram-tf:*transformer* "base_footprint" cube-name)))
-  (princ new-pose)
+ (let (( new-pose (cram-tf::frame-to-transform-in-frame "base_footprint" cube-name)))
   (let ((y-pos  (msg-slot-value (msg-slot-value
-                                 new-pose :translation) :x)))
+                                 new-pose :translation) :y)))
        (cond ((>= y-pos 0)
               (setf *selected-arm* "left"))
 
              ((setf *selected-arm* "right"))))))
+
+; (defun select-arm (cube-name)
+;  (let (( new-pose (cl-transforms-stamped:lookup-transform cram-tf:*transformer* cube-name "base_footprint"  :time 0.0 :timeout cram-tf:*tf-default-timeout*)))
+;   (princ new-pose)
+;   (let ((y-pos  (msg-slot-value (msg-slot-value
+;                                  new-pose :translation) :y)))
+;        (cond ((>= y-pos 0)
+;               (setf *selected-arm* "left"))
+
+;              ((setf *selected-arm* "right"))))))
       
      
 
@@ -139,11 +146,21 @@
 ;    (cl-transforms-stamped:lookup-transform cram-tf:*transformer* 
 ;     to-frame from-frame :timeout 10.0))
   
+; (defvar *tf-buffer-client* nil)
+; (defvar *tf-broadcast* t)
+; (defvar *tf-default-timeout* 2)
+; (defvar *tf2-tb* nil)
 
+; (defun init-tf-buffer-client ()
+;   (setf *tf-buffer-client* (make-instance 'cl-tf2:buffer-client))
+;   (setf *tf2-tb* (cl-tf2:make-transform-broadcaster)))
+  
+
+; (roslisp-utilities:register-ros-init-function init-tf-buffer-client)
 
 (defun init-tf ()
 
-  (setf cram-tf:*tf-default-timeout* 10.0)
+  (setf cram-tf:*tf-default-timeout* 2)
   (setf cram-tf:*tf-broadcasting-enabled* t)
   (setf cram-tf:*transformer* (make-instance 'cl-tf2:buffer-client)))
 
