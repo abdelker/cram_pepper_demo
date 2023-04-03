@@ -2,6 +2,12 @@
 
 (def-fact-group pepper-action-designators (action-grounding) 
 
+;;listen-to-interaction 
+(<- (desig:action-grounding ?desig (listen-to-interaction  ?desig))
+      (desig-prop ?desig (:type  :listening))
+      (desig-prop ?desig (:understand ?interaction-desig))
+      ) 
+
 ;;greet-human
   (<- (desig:action-grounding ?desig (greet-human ?desig))
       (desig-prop ?desig (:type  :greeting))
