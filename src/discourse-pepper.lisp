@@ -35,13 +35,13 @@
  (setq *list-explanation*
             (list (format nil "I'm going to ask you to remove ~a  cubes and put them in the pink box." word) (format nil "I'll describe you ~a  cubes to put in the pink box" word ) (format nil "We'll put ~a  the cubes in the pink box. I'll describe them to you" word)))
  (setq *list-please-take*
-           (list (format nil "Can you remove ~a" "Remove ~a" "Take ~a" word)))
+           (list (format nil "Can you remove ~a" word) (format nil "Remove ~a" word) (format nil "Take ~a" word)))
  (setq *list-wrong-cube*
            (list "I think you picked the wrong cube." "It seems to me that it is not this cube" "I wasn't thinking about this cube"))
  (setq *list-end*
           (list "Congratulations to you! Thank you for helping me. See you soon" "Great! Thanks for helping me. See you soon" "Well done  we did it. Thank you and see you soon"))
  (setq *list-help*
-            (list (format nil "~a can you help us?" "can ~a you help us?" word))) 
+            (list (format nil "~a can you help us?" word) (format nil "can ~a you help us?" word))) 
  (setq *list-congrate*
             (list "Bravo  it was the one" "Very good  it was this cube" "super it was him"))
  (setq *list-cancel*
@@ -51,7 +51,7 @@
  (setq *list-rescan*
             (list "Thank you  I will check what has moved" "Let's see what has moved"))
  (setq *list-discover*
-            (list (format nil "I saw a ~a" "There is a ~a" "Oh  a ~a" word)))
+            (list (format nil "I saw a ~a" word) (format nil "There is a ~a" word) (format nil "Oh  a ~a" word)))
  (setq *list-waiting*
             (list "Did you take it?" "I think the cube is still there"))
  (setq *list-point-good-cube*
