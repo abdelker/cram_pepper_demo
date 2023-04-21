@@ -1,5 +1,18 @@
 (in-package :pepper-demo)
 
+;; (defstruct understand-motion
+;;   "Represents motion types"
+
+;; )
+
+;; (def-fact-group process-input-motion-designators (motion-grounding)
+;; (<- (desig:motion-grounding ?desig (understand ?motion))
+;;     (desig-prop ?desig (:type :understanding))
+;;     (lisp-fun make-understand-motion ?motion))    
+;;     )
+
+
+;;navigation and scanning
 
 (defstruct pepper-looking-motion
   "Represents a looking motion"
@@ -38,8 +51,13 @@
     (desig-prop ?desig (:x ?x))
     (desig-prop ?desig (:y ?y))
     (desig-prop ?desig (:z ?z))
-    (lisp-fun make-pepper-scanning-motion :x ?x :y ?y :z ?z ?motion))    
+    (lisp-fun make-pepper-scanning-motion :x ?x :y ?y :z ?z ?motion)) 
+
+(<- (desig:motion-grounding ?desig (test ?motion))
+    (desig-prop ?desig (:type :testing))
+    (lisp-fun make-pepper-scanning-motion ?motion))     
     )
+;;communication 
 
 (defstruct pepper-communication-motion
   "Represents a speaking motion"
@@ -51,5 +69,20 @@
       (desig-prop ?desig (:type :speaking))
       (desig-prop ?desig (:sentence ?sentence))
       (lisp-fun make-pepper-communication-motion :sentence ?sentence ?motion)
+      ))
+
+;;manipulation 
+
+(defstruct pepper-manipulation-motion
+  "Represents a speaking motion"
+  sentence
+)
+
+(def-fact-group pepper-manipulation-motion-designators (motion-grounding)  
+  (<- (desig:motion-grounding ?desig (point ?motion))
+      (desig-prop ?desig (:type  :pointing))
+      (desig-prop ?desig (:at ?object-designator))
+      (desig-prop ?desig (:arm ?selected-arm))
+      (lisp-fun make-pepper-manipulation-motion :at ?object-designator :arm ?seleced-arm ?motion)
       ))
   
