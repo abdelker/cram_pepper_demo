@@ -2,6 +2,18 @@
 
 (def-fact-group pepper-action-designators (action-grounding) 
 
+;;monitoring-dt-task
+(<- (desig:action-grounding ?desig (monitor-dt-task  ?desig))
+      (desig-prop ?desig (:type  :monitoring))
+      (desig-prop ?desig (:task ?dt))
+      )
+
+;;waiting-for-human
+(<- (desig:action-grounding ?desig (wait-for-agent ?desig))
+      (desig-prop ?desig (:type  :waiting))
+      (desig-prop ?desig (:for ?you-agent-desig))
+      )
+
 ;;listen-to-interaction 
 (<- (desig:action-grounding ?desig (listen-to-interaction  ?desig))
       (desig-prop ?desig (:type  :listening)) ;
@@ -40,7 +52,7 @@
 ;;looking at
   (<- (desig:action-grounding ?desig (look-at ?desig))
       (desig-prop ?desig (:type  :looking))
-      (desig-prop ?desig (:target ?object-desig))
+      (desig-prop ?desig (:at ?object-desig))
       ;;(desig-prop ?desig (:arm ?arm))
       ) 
 ;;moving-to   

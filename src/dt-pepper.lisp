@@ -12,7 +12,7 @@
 (defvar *current-state* nil)
 (defvar *current-goal* nil)
 
-(defun init-dt-pepper ()
+(defun init-ros-dt-pepper ()
   (setf *speaking-point-pub* (advertise "/pepper_head_manager/speaking/pepper_head_manager_msgs1_PrioritizedPoint"
                               "pepper_head_manager_msgs/PrioritizedPoint"))
   (setf *env-point-pub* (advertise "/pepper_head_manager/env_monitoring/pepper_head_manager_msgs1_PrioritizedPoint"
@@ -24,18 +24,18 @@
   (setf *neutral-right-pub* (advertise "/pepper_arm_manager_right/manipulation/pepper_arm_manager_msgs2_PrioritizedJointTrajectory"
                              "pepper_head_manager_msgs/PrioritizedJointTrajectory"))
   (setf *neutral-left-pub* (advertise "/pepper_arm_manager_left/manipulation/pepper_arm_manager_msgs2_PrioritizedJointTrajectory"
-                            "pepper_head_manager_msgs/PrioritizedJointTrajectory"))
+                            "pepper_head_manager_msgs/PrioritizedJointTrajectory")))
   ; (setf *speechToText-sub* (subscribe "ros_stt/said" "std_msgs/String"
   ;                                     #'listenningDesignate)) 
-  (init-speaking-buffer)
-  (look-at)
-  (setq *current-state* nil)
-  (set-state :no-activity)
-  (look-at)
-  (call-ear-progress-srv 1)
-  (call-eye-color-srv "blue")
-  (call-neutral-pose-srv)
-  (setq *current-goal* nil))
+  ; (init-speaking-buffer)
+  ; (look-at)
+  ; (setq *current-state* nil)
+  ; (set-state :no-activity)
+  ; (look-at)
+  ; (call-ear-progress-srv 1)
+  ; (call-eye-color-srv "blue")
+  ; (call-neutral-pose-srv)
+  ; (setq *current-goal* nil))
 ;;;;;;;;;;;;;;ui-ontology-code;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun check-onto ()
@@ -185,7 +185,7 @@
                                                :value 1)))
         (publish *env-point-pub* (roslisp:make-msg "pepper_head_manager_msgs/PrioritizedPoint" 
                                                :priority priority-message :data point-message))
-        (look-at "env_monitoring")))
+        (looking-at "env_monitoring")))
   
 
 (defun init-speaking-buffer ()

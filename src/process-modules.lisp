@@ -20,9 +20,9 @@
 
                  (let ((obj (desig:desig-prop-value target :name)))
                     (print obj)
-                    (look-object obj)))))))
+                    (look-object obj)))
              
-     (test (princ "just testing"))       
+                ((princ "no object to look at"))))))      
              
      (move-to
             (let ((x  (pepper-moving-motion-x-val  motion))
